@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package producto;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.swing.JOptionPane;
-/**
- *
- * @author USUARIO
- */
+
 public class Inventario {
     private Queue<Producto> productos;
 
@@ -24,7 +17,7 @@ public class Inventario {
         }
         Producto producto = new Producto(nombre.trim(), codigo.trim());
         productos.add(producto);
-        JOptionPane.showMessageDialog(null, " Producto registrado con éxito.");
+        JOptionPane.showMessageDialog(null, "Producto registrado con éxito.");
     }
 
     public void despacharProducto() {
@@ -50,13 +43,40 @@ public class Inventario {
         }
     }
 
+    public void eliminarProductoPorCodigo(String codigo) {
+        if (productos.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El inventario está vacío.");
+            return;
+        }
+
+        Queue<Producto> temp = new LinkedList<>();
+        boolean encontrado = false;
+
+        while (!productos.isEmpty()) {
+            Producto p = productos.poll();
+            if (p.getCodigo().equalsIgnoreCase(codigo)) {
+                encontrado = true;
+                JOptionPane.showMessageDialog(null, "Producto eliminado: " + p.getNombre() + " (Código: " + p.getCodigo() + ")");
+            } else {
+                temp.add(p);
+            }
+        }
+
+        productos = temp;
+
+        if (!encontrado) {
+            JOptionPane.showMessageDialog(null, "No se encontró ningún producto con ese código.");
+        }
+    }
+
     public void ejecutar() {
         while (true) {
             String input = JOptionPane.showInputDialog(
                     "1: Registrar nuevo Producto\n" +
                     "2: Despachar Producto (FIFO)\n" +
                     "3: Ver Productos en Inventario\n" +
-                    "4: Salir\nIngrese su opción:");
+                    "4: Eliminar Producto por Código\n" +
+                    "5: Salir\nIngrese su opción:");
 
             if (input == null) {
                 JOptionPane.showMessageDialog(null, "Saliendo...");
@@ -84,6 +104,10 @@ public class Inventario {
                     verProductos();
                     break;
                 case 4:
+                    String codEliminar = JOptionPane.showInputDialog("Ingrese el código del producto a eliminar:");
+                    eliminarProductoPorCodigo(codEliminar);
+                    break;
+                case 5:
                     JOptionPane.showMessageDialog(null, "Saliendo del sistema...");
                     return;
                 default:
