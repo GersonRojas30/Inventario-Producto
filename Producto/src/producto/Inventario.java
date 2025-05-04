@@ -68,6 +68,40 @@ public class Inventario {
             JOptionPane.showMessageDialog(null, "No se encontró ningún producto con ese código.");
         }
     }
+    
+    public void editarNombreProductoPorCodigo(String codigoBuscado, String nuevoNombre) {
+        if (productos.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El inventario está vacío.");
+            return;
+        }
+
+        if (nuevoNombre == null || nuevoNombre.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El nuevo nombre no puede estar vacío.");
+            return;
+        }
+
+        Queue<Producto> temp = new LinkedList<>();
+        boolean encontrado = false;
+
+        while (!productos.isEmpty()) {
+            Producto p = productos.poll();
+            if (p.getCodigo().equalsIgnoreCase(codigoBuscado)) {
+                Producto actualizado = new Producto(nuevoNombre.trim(), p.getCodigo());
+                temp.add(actualizado);
+                encontrado = true;
+                JOptionPane.showMessageDialog(null, "Nombre actualizado correctamente.");
+            } else {
+                temp.add(p);
+            }
+        }
+
+        productos = temp;
+
+        if (!encontrado) {
+            JOptionPane.showMessageDialog(null, "No se encontró ningún producto con ese código.");
+        }
+    }
+    
 
     public void ejecutar() {
         while (true) {
@@ -76,7 +110,8 @@ public class Inventario {
                     "2: Despachar Producto (FIFO)\n" +
                     "3: Ver Productos en Inventario\n" +
                     "4: Eliminar Producto por Código\n" +
-                    "5: Salir\nIngrese su opción:");
+                    "5: Editar Código de Producto por Nombre\n" +
+                    "6: Salir\nIngrese su opción:");
 
             if (input == null) {
                 JOptionPane.showMessageDialog(null, "Saliendo...");
@@ -108,6 +143,11 @@ public class Inventario {
                     eliminarProductoPorCodigo(codEliminar);
                     break;
                 case 5:
+                    String codigoEditar = JOptionPane.showInputDialog("Ingrese el código del producto a editar:");
+                    String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre del producto:");
+                    editarNombreProductoPorCodigo(codigoEditar, nuevoNombre);
+                    break;
+                case 6:
                     JOptionPane.showMessageDialog(null, "Saliendo del sistema...");
                     return;
                 default:
